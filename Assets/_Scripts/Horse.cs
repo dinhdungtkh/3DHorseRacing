@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 public class Horse : MonoBehaviour
 {
@@ -24,19 +27,29 @@ public class Horse : MonoBehaviour
     private static float lastRandomizedDistance = 0;
     private GameControllerNew controllerNew;
 
+    public TMP_Text nameText;
+
+
     public void Start()
     {
         m_horseRb = GetComponent<Rigidbody>();
         m_animator = GetComponent<Animator>();
-        m_animator.SetBool("isRunning", false);
         controllerNew = FindObjectOfType<GameControllerNew>();
-       
+        if (ID != 1)
+        {
+            RandomizeBodyMaterial();
+            nameText.text = Name.ToString();
+            nameText.color = Color.white;
+        }
+        else
+        {
+            Name = "Player";
+            nameText.text = "Player";
+            nameText.color = Color.yellow;
+        }
     }
-    private void PlayRunningAnimation()
-    {
-        m_animator.SetBool("isRunning", true);
-        m_animator.Play("Rig_Gallop_Harsh_RootMotion");
-    }
+    
+    
 
     private void FixedUpdate()
     {
@@ -50,10 +63,14 @@ public class Horse : MonoBehaviour
         if (DistanceCovered >= lastRandomizedDistance + 100)
         {
             lastRandomizedDistance = DistanceCovered;
-            //Debug.Log("Ready to randomize");
             Speed = Random.Range(10f, 20f);
-            //  Debug.Log($"CurrentSpeed {Speed}");
-        }
+          
+        } 
+          if ( controllerNew.TrackLength - 200   < DistanceCovered && DistanceCovered < controllerNew.TrackLength - 150) 
+            {
+            Speed = Random.Range(30f, 40f);
+            }
+          
         m_horseRb.velocity = new Vector3(0, 0, InitialSpeed + Speed);
 
     }
@@ -62,15 +79,20 @@ public class Horse : MonoBehaviour
     {
         PlayRunningAnimation();
     }
-    
+    private void PlayRunningAnimation()
+    {
+        m_animator.SetBool("isRunning", true);
+        m_animator.Play("Rig_Gallop_Harsh_RootMotion");
+    }
 
      public void RandomizeBodyMaterial()
     {
             if (skinnedMeshRenderer != null && bodyMaterials.Length > 0)
             {
             int randomIndex = Random.Range(0, bodyMaterials.Length);
-            skinnedMeshRenderer.materials[0] = bodyMaterials[randomIndex];
-            Debug.Log(skinnedMeshRenderer.materials[0]);
+            skinnedMeshRenderer.material = bodyMaterials[randomIndex];
+           // Debug.Log(bodyMaterials[randomIndex]);
+           // Debug.Log(skinnedMeshRenderer.materials[0]);
             } 
     }
 }
