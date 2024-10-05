@@ -22,7 +22,8 @@ public class GameControllerNew : MonoBehaviour
     [SerializeField]
     public float currentLeadDistance = 0 ;
     public bool firstPrized = false;
-   
+    [SerializeField]
+    protected GameObject UIGameplay;
     public void StartRace()
     {
        
@@ -42,10 +43,11 @@ public class GameControllerNew : MonoBehaviour
                 Horses[i].transform.gameObject.name = "Horse " + Horses[i].ID;
                 Horses[i].Name = "Horse " + (i + 1);
             }
-            Horses[i].Speed = Random.Range(10f, 20f);
+            Horses[i].Speed = 25f;
             Horses[i].StartMove();
         }
         HorseList.transform.gameObject.SetActive(true);
+        UIGameplay.SetActive(true);
     }
 
     public void Awake()
@@ -83,6 +85,7 @@ public class GameControllerNew : MonoBehaviour
         if (finishedHorses.Count > 0 && finishedHorses.Count == Horses.Count)
         {
             HorseList.text = " ";
+            UIGameplay.SetActive(false);
             Invoke("ShowResultPanel", 1f);
         }
     }

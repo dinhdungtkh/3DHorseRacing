@@ -24,7 +24,8 @@ public class Horse : MonoBehaviour
     public float Position;
     private float InitialSpeed = 0;
     public float DistanceCovered = 0;
-    private static float lastRandomizedDistance = 0;
+    [SerializeField]
+    private  float lastRandomizedDistance = 0;
     private GameControllerNew controllerNew;
 
     public TMP_Text nameText;
@@ -47,6 +48,7 @@ public class Horse : MonoBehaviour
             nameText.text = "Player";
             nameText.color = Color.yellow;
         }
+        lastRandomizedDistance = 0;
     }
     
     
@@ -60,15 +62,21 @@ public class Horse : MonoBehaviour
             m_horseRb.velocity = Vector3.Lerp(m_horseRb.velocity, Vector3.zero, Time.deltaTime);
             return;
         }
+        float leadDistance = controllerNew.currentLeadDistance;
+        bool gap = true;
+        if (leadDistance - DistanceCovered >= 30 && !gap )
+        {
+            Speed += 2f;
+        }
         if (DistanceCovered >= lastRandomizedDistance + 100)
         {
             lastRandomizedDistance = DistanceCovered;
-            Speed = Random.Range(10f, 20f);
+           Speed = Random.Range(25f, 27f);
           
         } 
           if ( controllerNew.TrackLength - 200   < DistanceCovered && DistanceCovered < controllerNew.TrackLength - 150) 
             {
-            Speed = Random.Range(30f, 40f);
+            Speed = Random.Range(30f, 32f);
             }
           
         m_horseRb.velocity = new Vector3(0, 0, InitialSpeed + Speed);
